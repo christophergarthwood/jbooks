@@ -146,11 +146,11 @@ sudo /usr/sbin/usermod -aG "${THE_GROUP}" "${THE_USERNAME}"  || echo "...failed 
 #================================================================
 # Install Pip required libs since Anaconda can't handle them (user only)
 #================================================================
-#pip install nvidia-cudnn-cu11==8.6.0.163 --user;
-#pip install tensorflow==2.13.1 --user;
-#pip install tensorrt --user;
-#pip install svgling --user;
-#pip install PyMuPDF --user;
+pip install nvidia-cudnn-cu11==8.6.0.163 --user;
+pip install tensorflow==2.13.1 --user;
+pip install tensorrt --user;
+pip install svgling --user;
+pip install PyMuPDF --user;
 
 #================================================================
 # Install required Anaconda Packages

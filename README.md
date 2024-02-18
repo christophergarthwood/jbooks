@@ -1,4 +1,4 @@
-# Jupyter Notebooks for Data Science and AI/ML
+# Jupyter Notebooks for Data Science and AI/ML 
 
 Jupyter Notebooks for general data science, machine learning efforts (training), and Large Language Model (LLM) work.
 
