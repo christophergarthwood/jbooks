@@ -317,4 +317,4 @@ dependencies:
       - wordcloud==1.8.2.2
       - xarray==2022.12.0
       - xyzservices==2022.9.0
-prefix: /opt/app/anaconda/envs/machine_learning_codespaces
+prefix: /opt/conda/envs/machine_learning_codespaces

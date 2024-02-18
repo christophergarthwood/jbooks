@@ -1,6 +1,6 @@
 name: machine_learning_gpu
 channels:
-  - conda-forge
+  - defaults
 dependencies:
   - python=3.9
   - numpy
@@ -45,4 +45,7 @@ dependencies:
   - contextily
   - gensim
   - bertopic
+  - google-cloud-aiplatform
+  - xmltodict
+  - pytest
 prefix: /projects/app/anaconda/envs/machine_learning_gpu
