@@ -1,0 +1,18 @@
+#!/bin/sh
+
+CODESPACE_IP_ADDR="0.0.0.0";
+CODESPACE_ORIGIN=${hostname};
+CODESPACE_PORT="8080";
+
+
+jupyter_exe=$(which jupyter);
+if [ -x "${jupyter_exe}" ]; then
+	echo ".......export CODESPACE_PORT=${CODESPACE_PORT}; jupyter lab --port=${CODESPACE_PORT} --ip=${CODESPACE_IP_ADDR} --ServerApp.disable_check_xsrf=True --ServerApp.allow_origin=\'*\' --no-browser";
+	echo " ";
+	export CODESPACE_PORT=${CODESPACE_PORT}; jupyter lab --port=${CODESPACE_PORT} --ip=${CODESPACE_IP_ADDR} --ServerApp.disable_check_xsrf=True --ServerApp.allow_origin=\'*\' --no-browser
+else
+    echo ".......jupyter executable ( ${jupyter_exe} ) not found, unable to continue.";
+    echo ".......ensure you execute \`conda activate machine_learning_gpu\`";
+    echo ".......aborting execution, please find the location of your jupyter executable.";
+    exit 1;
+fi

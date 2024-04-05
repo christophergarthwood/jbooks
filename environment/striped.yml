@@ -1,0 +1,51 @@
+name: machine_learning_gpu
+channels:
+  - defaults
+dependencies:
+  - python=3.9
+  - numpy
+  - scipy
+  - matplotlib
+  - tabulate
+  - pandas
+  - jupyter_dashboards
+  - jupyter
+  - jupyterlab
+  - jupyter_contrib_nbextensions
+  - tqdm
+  - nbconvert
+  - scikit-learn
+  - keras-tuner
+  - optuna
+  - albumentations
+  - opencv
+  - imgaug
+  - imageio
+  - autopep8
+  - pylint
+  - black
+  - openai
+  - langchain
+  - fire
+  - transformers
+  - netcdf4
+  - icecream
+  - xarray
+  - seaborn
+  - geopandas
+  - cartopy
+  - holoviews
+  - hvplot
+  - nltk
+  - wordcloud
+  - bs4
+  - svglib
+  - tiktoken
+  - pathlib
+  - contextily
+  - gensim
+  - bertopic
+  - google-cloud-aiplatform
+  - xmltodict
+  - pytest
+prefix: /projects/app/anaconda/envs/machine_learning_gpu

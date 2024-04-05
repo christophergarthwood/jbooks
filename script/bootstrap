@@ -1,0 +1,234 @@
+#!/bin/bash
+
+# script/bootstrap: Resolve all dependencies that the application requires to
+# run.
+
+#set -e
+#================================================================
+# HEADER
+#================================================================
+funct_result=$(date +'%Y%m%d:%H%M')
+start_time=$(date +%s);
+echo "BEGIN";
+
+
+#*** VARIABLES ***
+#############################################################
+#  \ \   / / \  |  _ \|_ _|  / \  | __ )| |   | ____/ ___|
+#   \ \ / / _ \ | |_) || |  / _ \ |  _ \| |   |  _| \___ \
+#    \ V / ___ \|  _ < | | / ___ \| |_) | |___| |___ ___) |
+#     \_/_/   \_\_| \_\___/_/   \_\____/|_____|_____|____/
+#############################################################
+
+echo "Verifying location for script execution.";
+if [ ! -d ./.git ];
+then
+    echo "...This script must be run from the root directory of this repository.";
+    echo "......aborting execution, please ensure you run ./script/bootstrap.";
+    exit 1;
+else
+    echo "...verified script execution location is correct.";
+fi
+
+echo "Installing required dependencies for Anaconda";
+export THE_CONFIG_DIR="./cfg";
+export THE_CONFIG="${THE_CONFIG_DIR}/config.env";
+
+echo "...establishing variables.";
+if ! [ -f "${THE_CONFIG}" ];
+then
+    echo "...attempted to source ${SOURCE_FILE} and could not find it.  Without this file there's no point in attempting to continue.";
+    exit 1
+fi
+
+echo "...sourcing configuration file."
+source "${THE_CONFIG}";
+
+if [ -f "${CONDA_EXE}" ];
+then
+    echo "...confirmed Anaconda executable is at least present, continue build.";
+else
+    echo "First Check";
+    echo "...unable to locate conda executable ${CONDA_EXE}, cannot create an Anaconda env without this executable.";
+    echo "Perhaps Anaconda isn't installed.";
+    echo "CHECK YOUR devcontainer / Dockerfile configuration.";
+    #exit gracefully so the dotfiles carry into the build at least.
+    exit 0
+fi
+
+#*** FUNCTIONS ***
+#############################################################
+#    |  ___| | | | \ | |/ ___|_   _|_ _/ _ \| \ | / ___|
+#    | |_  | | | |  \| | |     | |  | | | | |  \| \___ \
+#    |  _| | |_| | |\  | |___  | |  | | |_| | |\  |___) |
+#    |_|    \___/|_| \_|\____| |_| |___\___/|_| \_|____/
+#############################################################
+#None
+
+
+#*** MAIN ***
+#############################################################
+#       |  \/  |  / \  |_ _| \ | |
+#       | |\/| | / _ \  | ||  \| |
+#       | |  | |/ ___ \ | || |\  |
+#       |_|  |_/_/   \_\___|_| \_|
+#############################################################
+
+#================================================================
+# Create a group for Anaconda
+#================================================================
+echo "...adding group for conda.";
+echo "...testing for group named conda.";
+IS_CONDA_GROUP=$(getent group conda | wc -l);
+if [ "${IS_CONDA_GROUP}" -eq 0 ];
+then
+    sudo groupadd -r "${THE_GROUP}" --gid ${THE_GID} || echo "...failed to add group ${THE_GROUP}, perhaps it already exists.";
+fi
+
+THE_VERIFIED_GID=$(getent group conda | awk -F: '{printf "%d", $3}')
+echo "...verified ${THE_GROUP}'s Group Id is: ${THE_VERIFIED_GID}";
+
+echo "...testing for symbolic link of conda environment to ${CONDA_LINK}";
+if ! [ -f "${CONDA_LINK}" ] && ! [ -h "${CONDA_LINK}" ];
+then
+    if [ -f ${CONDA_DIR}${CONDA_LINK} ];
+    then
+        sudo ln -s "${CONDA_DIR}${CONDA_LINK}" "${CONDA_LINK}"  || echo "...failed to link conda.sh to /etc/profile.d";
+    else
+        echo "...${CONDA_DIR}${CONDA_LINK} does not exist, nothing to symbolically link...you might have a problem.";
+    fi
+else
+    echo "...${CONDA_LINK} already symbolically linked";
+fi
+
+#================================================================
+# Source to bashrc
+#================================================================
+echo "...testing for sourcing of conda.sh in your ${THE_RC}";
+IS_SOURCED=$(grep "conda.sh" "${THE_RC}" | wc -l);
+if [ "${IS_SOURCED}" -eq 0 ];
+then
+    if [ -f "${THE_RC}" ];
+    then
+        sudo echo ". /usr/local/${THE_APP}/etc/profile.d/conda.sh" >> "${THE_RC}" || echo "...failed to include source reference of conda.sh in ${THE_RC}";
+    else
+        echo "...unable to locate the configuration file, ${THE_RC}, you might have a bigger problem as in Anaconda is not installed.";
+	echo "......adding source reference to ~/.bashrc";
+        sudo echo ". /usr/local/${THE_APP}/etc/profile.d/conda.sh" >> ~/.bashrc || echo "...failed to include source reference of conda.sh in .bashrc";
+    fi
+else
+    echo "...${THE_RC} already setup for sourcing conda.";
+    echo "......this will later be symbolically linked to ~/.bashrc";
+fi
+
+echo "...testing for conda activation in your ${THE_RC}";
+IS_ACTIVATED=$(grep "conda activate machine_learning" "${THE_RC}" | wc -l)
+if [ "${IS_ACTIVATED}" -eq 0 ];
+then
+    if [ -f "${THE_RC}" ];
+    then
+        sudo echo "${THE_APP} activate machine_learning" >> "${THE_RC}"  || echo "...failed to include call to conda activate in .bashrc";
+    else
+        echo "...unable to locate the configuration file ${THE_RC}, you might have a bigger problem as in Anaconda is not installed.";
+    fi
+else
+    echo "...${THE_RC} already setup for conda activation.";
+    echo "......this will later be symbolically linked to ~/.bashrc";
+fi
+
+
+#================================================================
+# Ensure vscode is registered
+#================================================================
+THE_USERNAME="vscode";
+sudo /usr/sbin/usermod -aG "${THE_GROUP}" "${THE_USERNAME}"  || echo "...failed to usermod -aG ${THE_GROUP} ${THE_USERNAME}"
+
+#================================================================
+# Install Pip required libs since Anaconda can't handle them (user only)
+#================================================================
+pip install nvidia-cudnn-cu11==8.6.0.163 --user;
+pip install tensorflow==2.13.1 --user;
+pip install tensorrt --user;
+pip install svgling --user;
+pip install PyMuPDF --user;
+
+#================================================================
+# Install required Anaconda Packages
+#================================================================
+echo "...installing Anaconda environment.";
+if [ -f "${CONDA_EXE}" ];
+then
+    if [ -f "${CONDA_EXE}" ];
+    then
+        for the_environment in ${THE_ANACONDA_ENV[@]}
+        do
+            target_environment_file="${PROJECT_DIR}/environment/${the_environment}.yml";
+            if [ -f "${target_environment_file}" ];
+            then
+                sudo ${CONDA_EXE} env create --file "${target_environment_file}";
+                export status=$?;
+                if [ "${status}" -eq 0 ];
+                then
+                    echo "......${the_environment} environment completed.";
+                else
+                    echo "......FAILED to install ${the_environment} environment.";
+                    echo ".........status code (${status}) returned.";
+                fi
+            else
+                echo "...FAILED to detect the (${target_environment_file}), without this file installation cannot begin.";
+                echo "......locate / resolve the target environment file location and re-run this script.  Aborting execution.";
+                exit 1;
+            fi
+        done
+    else
+        echo "...unable to locate the conda executable ${THE_ANACONDA_ENV}, your repo has an issue.";
+    fi
+else
+    echo "...unable to locate the conda executable ${CONDA_EXE}, cannot create an Anaconda env without this executable.  Perhaps Anaconda isn't installed.";
+fi
+
+
+
+#================================================================
+#- Install required folders and data associated with this effort
+#================================================================
+for the_dir in ${THE_DIRS[@]}
+do
+    echo "...creating ${the_dir}"
+    mkdir -p "${THE_ROOT}/${the_dir}" || echo "......failed to create ${THE_ROOT}/${the_dir}, expect the notebook to fail.";
+    ${CHMOD_EXE} -R u+rwx "${THE_ROOT}/${the_dir}";
+done
+
+#================================================================
+#- Download the data file and place it for the user
+#================================================================
+export ORIGINAL_DIR=$(pwd);
+cd "${THE_ROOT}";
+confirm=$( ${WGET_EXE} --quiet --save-cookies /tmp/cookies.txt --keep-session-cookies --no-check-certificate 'https://docs.google.com/uc?export=download&id='$GOOGLE_FILE_ID -O- | sed -rn 's/.*confirm=([0-9A-Za-z_]+).*/\1\n/p')
+${WGET_EXE} --load-cookies /tmp/cookies.txt "https://docs.google.com/uc?export=download&confirm=$confirm&id=$GOOGLE_FILE_ID" -O ${THE_DATA} && rm -rf /tmp/cookies.txt
+
+if [ -f "${THE_DATA}" ];
+then
+    ${TAR_EXE} xvfz "${THE_DATA}";
+    ${RM_EXE} -rf "${THE_DATA}";
+    ${CHMOD_EXE} -R u+rwx "${THE_ROOT}/data";
+    echo "...Google Drive data downloaded, unpacked, and ready to go.";
+else
+    echo "...unable to locate the data location, ${THE_DATA}.  Perhaps the download didn't work.  Without ${THE_ROOT}/data your notebook won't work.";
+fi
+
+cd "${ORIGINAL_DIR}";
+
+#================================================================
+#- Register the CUDA library with the system  (will be impacted by new version releases)
+#================================================================
+echo "...symbolically linking /usr/local/cuda/targets/x86_64-linux/lib/libcudart.so.11.8.89 to same dir with name libcuda.so.1 in support of Tensorflow.";
+sudo ln -s /usr/local/cuda/targets/x86_64-linux/lib/libcudart.so.11.8.89 /usr/local/cuda/targets/x86_64-linux/lib/libcuda.so.1;
+
+echo "...adding CUDA library to /etc/profile to ensure it's always set.";
+sudo echo "export LD_LIBRARY_PATH=\"${LD_LIBRARY_PATH}:/usr/local/cuda/targets/x86_64-linux/lib\"" >> ~/.profile;
+
+end_time=$(date +%s);
+echo "Execution time was $((end_time - start_time)) s.";
+echo "END";
+

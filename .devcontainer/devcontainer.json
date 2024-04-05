@@ -1,0 +1,87 @@
+{
+    "build": {
+	"name": "Machine Learning",
+        "dockerfile": "./Dockerfile",
+        "context": ".",
+
+	// Set *default* container specific settings.json values on container create.
+	"settings": { "terminal.integrated.shell.linux": "/bin/bash" }
+    },
+
+    //"image": "mcr.microsoft.com/devcontainers/universal:2",
+    "image": "mcr.microsoft.com/devcontainers/base:debian",
+
+    "hostRequirements": {
+       "cpus":    4,
+       "memory": "8gb",
+       "storage":"60gb"
+    },
+    "features": {
+        "ghcr.io/devcontainers/features/nvidia-cuda:1": {
+            "installCudnn": true
+        },
+	//-removed as they are not required for this particular effort (good to know)
+        //"ghcr.io/devcontainers/features/aws-cli:1": {},
+        //"ghcr.io/devcontainers/features/azure-cli:1": {},
+        //"ghcr.io/dhoeric/features/google-cloud-cli:1": {},
+        "ghcr.io/devcontainers/features/common-utils:1":{
+            "installZsh": "true",
+            "username": "vscode",
+            "uid": "1001",
+            "gid": "1001",
+            "upgradePackages": "true"
+        }
+    },
+    "overrideFeatureInstallOrder": [
+        "ghcr.io/devcontainers/features/common-utils"
+    ],
+
+	// Configure tool-specific properties.
+	"customizations": {
+		// Configure properties specific to VS Code.
+		"vscode": {
+			// Set *default* container specific settings.json values on container create.
+			"settings": {
+				"python.defaultInterpreterPath": "/usr/local/bin/python",
+				"python.linting.enabled": true,
+				"python.linting.pylintEnabled": true,
+				"python.formatting.autopep8Path": "/usr/local/py-utils/bin/autopep8",
+				"python.formatting.blackPath": "/usr/local/py-utils/bin/black",
+				"python.formatting.yapfPath": "/usr/local/py-utils/bin/yapf",
+				"python.linting.banditPath": "/usr/local/py-utils/bin/bandit",
+				"python.linting.flake8Path": "/usr/local/py-utils/bin/flake8",
+				"python.linting.mypyPath": "/usr/local/py-utils/bin/mypy",
+				"python.linting.pycodestylePath": "/usr/local/py-utils/bin/pycodestyle",
+				"python.linting.pydocstylePath": "/usr/local/py-utils/bin/pydocstyle",
+				"python.linting.pylintPath": "/usr/local/py-utils/bin/pylint"
+			},
+			// Add the IDs of extensions you want installed when the container is created.
+			"extensions": [
+				"ms-python.python",
+				"ms-python.vscode-pylance",
+		   	        "ms-toolsai.jupyter"
+			]
+		}
+	},
+
+	// Use 'forwardPorts' to make a list of ports inside the container available locally.
+	"forwardPorts": [8080],
+
+	// Use 'postCreateCommand' to run commands after the container is created.
+	"postCreateCommand": "/bin/bash /workspaces/jbooks/script/bootstrap > ~/post-create-bootstrap.log",
+
+
+	// Set `remoteUser` to `root` to connect as root instead. More info: https://aka.ms/vscode-remote/containers/non-root.
+	"remoteUser": "vscode",
+
+	"customizations": {
+	    "codespaces": {
+      		"repositories": {
+        		"christophergarthwood/jbooks": {
+          			"permissions": "read-all"
+        			}
+      		}
+       	    }
+        }
+
+} //end

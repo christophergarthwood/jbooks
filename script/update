@@ -1,0 +1,12 @@
+#!/bin/sh
+
+# script/update: Update application to run for its current checkout.
+
+set -e
+
+#cd "$(dirname "$0")/.."
+
+echo "==> Updating whatever is required for an update such as finding dependencies or updating data files…"
+sudo script/bootstrap
+
+

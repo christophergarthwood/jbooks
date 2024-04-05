@@ -1,0 +1,125 @@
+##########################################################
+# - Universal
+##########################################################
+# Node rules:
+## Grunt intermediate storage (http://gruntjs.com/creating-plugins#storing-task-files)
+.grunt
+
+# Classic log files
+*.log
+
+## Dependency directory
+## Commenting this out is preferred by some people, see
+## https://docs.npmjs.com/misc/faq#should-i-check-my-node_modules-folder-into-git
+node_modules
+
+# Book build output
+_book
+
+# eBook build output
+*.epub
+*.mobi
+*.pdf
+
+##########################################################
+# - Ignore thumbnails created by windows
+##########################################################
+Thumbs.db
+
+##########################################################
+# - Ansible
+##########################################################
+*.retry
+
+##########################################################
+# - Fancy Ignore (?)
+##########################################################
+*.rbc
+*.fyc
+
+##########################################################
+# - Ignore files build by Visual Studio
+##########################################################
+*.obj
+*.exe
+*.pdb
+*.user
+*.aps
+*.pch
+*.vspscc
+*_i.c
+*_p.c
+*.ncb
+*.suo
+*.tlb
+*.tlh
+*.bak
+*.cache
+*.ilk
+*.log
+*.dll
+*.lib
+*.sbr
+
+##########################################################
+#- C Programming
+##########################################################
+# Prerequisites
+*.d
+
+# Object files
+*.o
+*.ko
+*.obj
+*.elf
+
+# Linker output
+*.ilk
+*.map
+*.exp
+
+# Precompiled Headers
+*.gch
+*.pch
+
+# Libraries
+*.lib
+*.a
+*.la
+*.lo
+
+# Shared objects (inc. Windows DLLs)
+*.dll
+*.so
+*.so.*
+*.dylib
+
+# Executables
+*.exe
+*.out
+*.app
+*.i*86
+*.x86_64
+*.hex
+
+# Debug files
+*.dSYM/
+*.su
+*.idb
+*.pdb
+
+# Kernel Module Compile Results
+*.mod*
+*.cmd
+.tmp_versions/
+modules.order
+Module.symvers
+Mkfile.old
+dkms.conf
+
+# Python
+
+*.pyc*
+__pycache__
+*.pkl            #pickled data files
+.ipynb_checkpoints

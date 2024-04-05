@@ -1,0 +1,57 @@
+#!/bin/bash
+
+#*** VARIABLES ***
+#############################################################
+#  \ \   / / \  |  _ \|_ _|  / \  | __ )| |   | ____/ ___|
+#   \ \ / / _ \ | |_) || |  / _ \ |  _ \| |   |  _| \___ \
+#    \ V / ___ \|  _ < | | / ___ \| |_) | |___| |___ ___) |
+#     \_/_/   \_\_| \_\___/_/   \_\____/|_____|_____|____/
+#############################################################
+echo "Verifying location for script execution.";
+if [ ! -d ./.git ];
+then
+    echo "...This script must be run from the root directory of this repository.";
+    echo "......aborting execution, please ensure you run ./script/bootstrap.";
+    exit 1;
+else
+    echo "...verified script execution location is correct.";
+fi
+
+echo "Installing required dependencies for Anaconda";
+export THE_CONFIG_DIR="./cfg";
+export THE_CONFIG="${THE_CONFIG_DIR}/config.env";
+
+echo "...establishing variables.";
+if ! [ -f "${THE_CONFIG}" ];
+then
+    echo "...attempted to source ${THE_CONFIG} and could not find it.  Without this file there's no point in attempting to continue.";
+    exit 1
+else
+    source "${THE_CONFIG}";
+fi
+
+export the_conda=$(which ${CONDA_EXE});
+if ! [ -f "${the_conda}" ];
+then
+    echo "Could not find ${the_conda} which is required to activate the ${CONDA_ENV} environment.";
+    echo "Please find the appropriate location and rectify.  Check your build environment logs ~/post*.log for clues.";
+    exit 1
+fi
+
+#*** MAIN ***
+#############################################################
+#       |  \/  |  / \  |_ _| \ | |
+#       | |\/| | / _ \  | ||  \| |
+#       | |  | |/ ___ \ | || |\  |
+#       |_|  |_/_/   \_\___|_| \_|
+#############################################################
+echo "If using Codespaces open the Port from Private to Public after executing:";
+echo "......../script/load_conda";
+source ./script/load_conda
+
+echo ".......conda activate ${CONDA_ENV}";
+conda activate ${CONDA_ENV};
+
+echo ".......export CODESPACE_PORT=${CODESPACE_PORT}; ${JUPYTER_EXE} --port=${CODESPACE_PORT} --ip=${CODESPACE_IP_ADDR} --ServerApp.disable_check_xsrf=True --ServerApp.allow_origin=\'*\' --no-browser"
+echo ".......calling this command.";
+${JUPYTER_EXE} --port="${CODESPACE_PORT}" --ip=${CODESPACE_IP_ADDR} --ServerApp.disable_check_xsrf=True --ServerApp.allow_origin=\'*\' --no-browser

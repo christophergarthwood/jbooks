@@ -1,0 +1,109 @@
+#!/bin/bash
+
+# script/test: Run test suite for application. Optionally pass in a path to an
+#              individual test file to run a single test.
+
+#we'll manage the errors ourselves.
+#set -e
+
+#cd "$(dirname "$0")/.."
+#[ -z "$DEBUG" ] || set -x
+
+funct_result=$(date +'%Y%m%d:%H%M')
+start_time=$(date +%s);
+echo "BEGIN $this_script at ${funct_result}";
+
+#*** VARIABLES ***
+#############################################################
+#  \ \   / / \  |  _ \|_ _|  / \  | __ )| |   | ____/ ___|
+#   \ \ / / _ \ | |_) || |  / _ \ |  _ \| |   |  _| \___ \
+#    \ V / ___ \|  _ < | | / ___ \| |_) | |___| |___ ___) |
+#     \_/_/   \_\_| \_\___/_/   \_\____/|_____|_____|____/
+#############################################################
+export THE_CONFIG_DIR="/workspaces/jbooks/script";
+export THE_CONFIG="${THE_CONFIG_DIR}/config.env";
+
+echo "==> Establishing variables";
+if ! [ -f "${THE_CONFIG}" ];
+then
+    echo "...attempted to source ${SOURCE_FILE} and could not find it.  Without this file there's no point in attempting to continue.";
+    exit 1
+fi
+
+source "${THE_CONFIG}";
+export DATA_LOCATION="${THE_ROOT}/data";
+export LIB_LOCATION="${PROJECT_DIR}";
+
+echo "==> Infrastructure Setup"
+echo "....${PAPERMILL_EXE}";
+echo "....creating /tmp/tests folder";
+
+the_tests_root_DIR="/workspaces/jbooks";
+the_tests_target_DIR="/tmp/tests";
+the_tests_log="${the_tests_target_DIR}/theLog.log";
+the_tests_ext=".ipynb";
+the_tests=( 000_Intro 001_HelloWorld 002_pandas_DataStructure_Series 003_pandas_DataStructure_DataFrame 004_sklearn_pandas_linearRegress_opticsMoorningData 005_insitu_merger 006_pandas_Series_AC9_Flo-thru 006a_pandas_Series_AC9_Flo-thru_MemoryReduction 007_pandas_NetCDF 007a_pandas_NetCDF_withXarray 009_BinaryReadOf_NCODAPreQC 010_PythonClasses_Self 013_JupyterDebugging 014_JupyterPythonMainArgs ML-000-b_KerasTensorFlowAPI ML-000-c_KerasTensorFlowDataset ML-000-d_KerasTensorFlowGPU ML-001_sklearn_linearRegression )
+
+#*** MAIN ***
+#############################################################
+#       |  \/  |  / \  |_ _| \ | |
+#       | |\/| | / _ \  | ||  \| |
+#       | |  | |/ ___ \ | || |\  |
+#       |_|  |_/_/   \_\___|_| \_|
+#############################################################
+if [ -d "${the_tests_target_DIR}" ];
+then
+    echo "...found existing ${the_tests_target_DIR}, deleting.";
+    rm -rf "${the_tests_target_DIR}";
+fi
+
+mkdir -p "${the_tests_target_DIR}" || echo "Failed to create the test folder, expect the remainder of this script to fail.";
+status=$?
+if [ "${status}" -ne 0 ];
+then
+    echo "...failed to create the target directory.  Aborting.";
+    exit 1;
+else
+    echo "...created directory.";
+fi
+
+if [ -d "${the_tests_target_DIR}" ];
+then
+    echo "...verified directory exists.";
+fi
+
+echo "==> Running tests…"
+export overall_status=0;
+for the_notebook in ${the_tests[@]}
+do
+    echo "......executing ${the_notebook}";
+    ${PAPERMILL_EXE}  "${the_tests_root_DIR}/${the_notebook}${the_tests_ext}"  "${the_tests_target_DIR}/${the_notebook}${the_tests_ext}" >> "${the_tests_log}" 2>&1;
+    status=$?
+    if [ "${status}" -ne 0 ];
+    then
+        echo -n ".........failed";
+        printf '\U1F44E\n';
+        overall_status=1;
+    else
+        echo -n ".........passed";
+        printf '\U1F44D\n';
+    fi
+done
+
+echo " ";
+if [ "${overall_status}" -eq 0 ];
+then
+    echo -n "SUCCESS!";
+    printf '\U1F600\n'
+else
+    echo -n "FAILURE!";
+    printf '\U1F627\n'
+fi
+
+echo " ";
+echo "Explicit test results in ${the_tests_log}";
+
+end_time=$(date +%s);
+echo "Execution time was $((end_time - start_time)) s.";
+echo "END"
+
