@@ -1,0 +1,5 @@
+name: usfs_r_env
+channels:
+  - conda-forge
+  - defaults
+prefix: /opt/conda/envs/usfs_r_env

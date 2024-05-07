@@ -1,0 +1,5 @@
+name: sonya_python
+channels:
+  - conda-forge
+  - defaults
+prefix: /opt/conda/envs/sonya_python

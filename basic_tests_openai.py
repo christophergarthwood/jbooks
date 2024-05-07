@@ -55,7 +55,7 @@ try:
 
 except Exception as e:
     print("ERROR: openai.ChatCompletion failed.")
-    print("...the following error resulted from teh API call:")
+    print("...the following error resulted from the API call:")
     print(f"......{str(e)}")
     exit(1) 
 

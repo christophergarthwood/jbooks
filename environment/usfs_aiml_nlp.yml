@@ -1,0 +1,5 @@
+name: usfs_aiml_nlp
+channels:
+  - conda-forge
+  - defaults
+prefix: /opt/conda/envs/usfs_aiml_nlp

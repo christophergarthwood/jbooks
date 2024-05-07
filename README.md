@@ -14,6 +14,8 @@ The entire process is self-contained will build the environment, download the da
 
 Make sure you source your .bashrc prior to starting with this notebook on the command-line (CLI):
 
+Recognize that this is a large configuration / setup and the Anaconda installation will take a while...get some coffee.
+
 ```
 source ~/.bashrc;
 ```
@@ -21,10 +23,12 @@ source ~/.bashrc;
 Also ensure, after sourcing your rc file, that you:
 
 ```
-conda activate machine_learning_gpu;
+conda activate usfs_aiml_loaded;
 ```
 
-Then in the /workspaces/jbooks folder (which you should default in):
+Root folders for this project will vary depending on your compute platform.  If running this project from GitHub Codespaces then your starting folder will be /workspaces/jbooks folder.
+
+Then in the root folder execute teh following script:
 
 ```
 ./script/run_codespaces_jupyter;
@@ -41,7 +45,7 @@ You will need data to run these notebooks, see the Get the Data section.
 ```
 conda init bash;
 source ~/.bashrc;
-conda activate machine_learning_gpu;
+conda activate usfs_aiml_loaded;
 /workspaces/jbooks/script/run_codespaces_jupyter;
 ```
 
@@ -56,22 +60,24 @@ conda info --envs;
 ## Activates or makes those libs available
 
 ```
-conda activate machine_learning_gpu;
+conda activate usfs_aiml_loaded;
 ```
 
 
 ## Completly clears the slate and remove that environment
 
 ```
-conda remove --name machine_learning_gpu --all;
+conda remove --name usfs_aiml_loaded --all -y;
 ```
 
 # Building the Environment
 
 ## Environment export / creation methods
 
+Assume you're in the root folder of the project.  Note that installation of conda environments should be in a universal location.  Experience has shown that /opt/conda is the best candidate for your Anaconda environment.
+
 ```
-sudo $(which conda) env create --prefix /opt/conda/envs/machine_learning_gpu/ --file ./environment/environment.yml;
+sudo $(which conda) env create --prefix /opt/conda/envs/usfs_aiml_loaded/ --file ./environment/environment.yml;
 ```
 
 ***OR use***
@@ -97,15 +103,15 @@ export LD_LIBRARY_PATH="${LD_LIBRARY_PATH}:/usr/lib:/usr/lib64:${PATH_ROOT}/.loc
 
 ### Anaconda Setup by Hand
 ```
-conda create -n machine_learning_gpu python=3.9;
-conda activate machine_learning_gpu;
+conda create -n usfs_aiml_loaded python=3.9;
+conda activate usfs_aiml_loaded;
 conda install -c conda-forge cudatoolkit=11.8.0 -y;
 ```
 
 #### Additional (required) libraries by category
 
 ```
-conda activate machine_learning_gpu;
+conda activate usfs_aiml_loaded;
 ```
 
 *Science Libs*
@@ -114,16 +120,22 @@ conda activate machine_learning_gpu;
 conda install -c conda-forge numpy pandas tabulate scipy matplotlib -y;
 ```
 
-*Jupyter*
+*Extra scientific tools (NetCDF, Xarray, Logging)*
 
 ```
-conda install -c conda-forge jupyter jupyterlab jupyter_dashboards jupyter_contrib_nbextensions -y;
+conda install -c conda-forge netCDF4 xarray icecream geopandas;
+```
+
+*Jupyter Notebook / Lab*
+
+```
+conda install -c conda-forge jupyter jupyterlab jupyter_dashboards nbconvert -y;
 ```
 
 *Progressbar*
 
 ```
-conda install -c conda-forge nbconvert tqdm -y;
+conda install -c conda-forge tqdm -y;
 ```
 
 *Sci-Kit*
@@ -132,7 +144,7 @@ conda install -c conda-forge nbconvert tqdm -y;
 conda install -c conda-forge scikit-learn -y;
 ```
 
-*Tuning*
+*AI/ML Tuning*
 
 ```
 conda install -c conda-forge keras-tuner optuna -y;
@@ -141,7 +153,7 @@ conda install -c conda-forge keras-tuner optuna -y;
 *Image Processing*
 
 ```
-conda install -c conda-forge opencv imageio albumentations imgaug -y;
+conda install -c conda-forge opencv imageio albumentations imgaug pillow -y;
 ```
 
 *Code Linting*
@@ -156,22 +168,22 @@ conda install -c conda-forge pylint autopep8 black -y;
 conda install -c conda-forge openai -y;
 ```
 
+*Google Model Garden - Vertex*
+
+```
+conda install -c conda-forge google-cloud-aiplatform;
+```
+
 *Large Language Model (LLM) Infrastructure*
 
 ```
-conda install -c conda-forege fire longchain transformers;
+conda install -c conda-forege fire langchain transformers unstructured;
 ```
 
 *Natural Language Processing (NLP)*
 
 ```
-conda install -c conda-forge pathlib nltk wordcloud bs4 -y;
-```
-
-*Additional NLP Libraries (Sonya)*
-
-```
-conda install -c conda-forge bertopic gensim
+conda install -c conda-forge pathlib nltk wordcloud bs4 bertopic gensim -y;
 ```
 
 *Pip (Nltk inspired Graphics Lib, Non-Anaconda, not available via Anaconda)*
@@ -186,22 +198,10 @@ pip install svgling --user;
 pip install PyMuPDF --user;
 ```
 
-*Extra tools (NetCDF, Xarray, Logging)*
-
-```
-conda install -c conda-forge netCDF4 xarray icecream geopandas;
-```
-
 *Plotting Packages and GIS*
 
 ```
 conda install -c conda-forge cartopy holoviews hvplot bokeh seaborn;
-```
-
-*Google Model Garden - Vertex*
-
-```
-conda install -c conda-forge google-cloud-aiplatform;
 ```
 
 
@@ -231,39 +231,23 @@ which will unpack the data into /workspaces/data.
 
 ***Stripped down version of an environment***
 ```
-sudo $(which conda) env export --from-history --name machine_learning_gpu > striped.yml;
+sudo $(which conda) env export --from-history --name usfs_aiml_loaded > striped.yml;
 ```
 
 ***Most secure method cross-platform***
 ```
-sudo $(which conda) env export --no-builds  --name machine_learning_gpu > ./environment/archless_environment.yml;
+sudo $(which conda) env export --no-builds  --name usfs_aiml_loaded > ./environment/archless_environment.yml;
 ```
 
-***Most generic method***
+***Most generic method (verified to work everywhere)***
 ```
-sudo $(which conda) env export --name machine_learning_gpu > ./environment/environment.yml;
+sudo $(which conda) env export --name usfs_aiml_loaded > ./environment/environment.yml;
 ```
 
 # Clean Up the Anaconda release to make disk space
 ```
 sudo $(which conda) clean --all -y;
 ```
-
-# References
-
-## Tensorflow Install Reference
-https://cse.ucdenver.edu/~biswasa/posts/2023/08/biswas/blog-ubuntu-tensorflow/
-
-## Cloud Provider CLI commands
-
-### Google Cloud Provider (GDP) - `gcloud`
-[gcloud](https://cloud.google.com/storage/docs/gsutil_install#linux)
-
-### Amazon Web Services (AWS) - `aws`
-[aws](https://docs.aws.amazon.com/cli/v1/userguide/install-linux.html)
-
-Azure - `az`
-[az](https://learn.microsoft.com/en-us/cli/azure/install-azure-cli-linux?pivots=script)
 
 # Useful Notes
 
@@ -338,6 +322,44 @@ sudo apt remove *nvidia*;
 sudo reboot now;
 ```
 
+## Tailored Environments
+
+### aiml_basic
+```
+conda create -n usfs_aiml_basic -c conda-forge python=3.9 numpy pandas tabulate scipy matplotlib jupyter jupyterlab jupyter_dashboards nbconvert tqdm icecream scikit-learn netCDF4 xarray icecream geopandas pylint autopep8 black unidecode -y
+```
+
+### aiml_nlp
+
+https://www.analyticsvidhya.com/blog/2021/05/top-python-libraries-for-natural-language-processing-nlp-in/
+
+```
+conda create -n usfs_aiml_nlp -c conda-forge python=3.9 numpy pandas tabulate scipy matplotlib jupyter jupyterlab jupyter_dashboards nbconvert tqdm scikit-learn pylint autopep8 black bertopic nltk spacy textblob gensim plotly unidecode icecream -y
+```
+
+### aiml_llm
+```
+conda create -n usfs_aiml_llm -c conda-forge python=3.9 numpy pandas tabulate scipy matplotlib jupyter jupyterlab jupyter_dashboards nbconvert tqdm scikit-learn pylint autopep8 black bertopic nltk spacy textblob gensim fire langchain transformers unstructured openai google-cloud-aiplatform unidecode icecream -y
+```
+
+### aiml_loaded
+```
+pip install nvidia-cudnn-cu11==8.6.0.163 --user;
+pip install tensorflow==2.13.1 --user;
+pip install tensorrt --user
+pip install svgling --user;
+pip install PyMuPDF --user
+conda create -n usfs_aiml_loaded -c conda-forge numpy pandas tabulate scipy matplotlib jupyter jupyterlab jupyter_dashboards nbconvert tqdm icecream scikit-learn netCDF4 xarray geopandas  keras-tuner optuna pylint autopep8 black unidecode nltk spacy textblob gensim pathlib nltk wordcloud bs4 plotly opencv imageio albumentations imgaug cartopy holoviews hvplot bokeh seaborn fire langchain transformers openai google-cloud-aiplatform
+conda activate usfs_aiml_loaded conda-forge/label/cf202003::keras-tuner -y
+
+conda install pytorch torchvision torchaudio pytorch-cuda=11.8 -c pytorch -c nvidia
+
+```
+### r_env
+```
+conda create -n usfs_r_env -c conda-forge r-base r-essentials r rstudio r-shiny rtools
+```
+
 ## Useful Command(s)
 alias watch_gpu='watch -n 1 nvidia-smi'
 
@@ -385,5 +407,23 @@ Things to know:
 + (NVIDIA Install Guide)[https://docs.nvidia.com/cuda/cuda-installation-guide-linux/index.html]
 + (Jupyter Notebook Password Setup / Config)[https://medium.com/@nyghtowl/setup-jupyter-notebook-access-on-google-compute-engine-with-https-ad69297f438b]
 +  https://github.com/parrt/dtreeviz
++  https://stackoverflow.com/questions/37453841/download-a-file-from-google-drive-using-wget
 
+# References
 
+## Tensorflow Install Reference
+https://cse.ucdenver.edu/~biswasa/posts/2023/08/biswas/blog-ubuntu-tensorflow/
+
+## Cloud Provider CLI commands
+
+### Google Cloud Provider (GDP) - `gcloud`
+[gcloud](https://cloud.google.com/storage/docs/gsutil_install#linux)
+
+### Amazon Web Services (AWS) - `aws`
+[aws](https://docs.aws.amazon.com/cli/v1/userguide/install-linux.html)
+
+Azure - `az`
+[az](https://learn.microsoft.com/en-us/cli/azure/install-azure-cli-linux?pivots=script)
+
++ https://ubuntuhandbook.org/index.php/2021/12/install-tesseract-ocr-5-ubuntu/#google_vignette
++ https://installati.one/install-libmagic-dev-ubuntu-22-04/

@@ -204,13 +204,21 @@ done
 #================================================================
 export ORIGINAL_DIR=$(pwd);
 cd "${THE_ROOT}";
-confirm=$( ${WGET_EXE} --quiet --save-cookies /tmp/cookies.txt --keep-session-cookies --no-check-certificate 'https://docs.google.com/uc?export=download&id='$GOOGLE_FILE_ID -O- | sed -rn 's/.*confirm=([0-9A-Za-z_]+).*/\1\n/p')
-${WGET_EXE} --load-cookies /tmp/cookies.txt "https://docs.google.com/uc?export=download&confirm=$confirm&id=$GOOGLE_FILE_ID" -O ${THE_DATA} && rm -rf /tmp/cookies.txt
+#confirm=$( ${WGET_EXE} --quiet --save-cookies /tmp/cookies.txt --keep-session-cookies --no-check-certificate 'https://docs.google.com/uc?export=download&id='$GOOGLE_FILE_ID -O- | sed -rn 's/.*confirm=([0-9A-Za-z_]+).*/\1\n/p')
+#${WGET_EXE} --load-cookies /tmp/cookies.txt "https://docs.google.com/uc?export=download&confirm=$confirm&id=$GOOGLE_FILE_ID" -O ${THE_DATA} && rm -rf /tmp/cookies.txt
+
+#wget --load-cookies /tmp/cookies.txt "https://docs.google.com/uc?export=download&confirm=$(wget --quiet --save-cookies /tmp/cookies.txt --keep-session-cookies --no-check-certificate 'https://docs.google.com/uc?export=download&id=FILEID' -O- | sed -rn 's/.*confirm=([0-9A-Za-z_]+).*/\1\n/p')&id=FILEID" -O FILENAME && rm -rf /tmp/cookies.txt
+wget --load-cookies /tmp/cookies.txt "https://docs.google.com/uc?export=download&confirm=$(wget --quiet --save-cookies /tmp/cookies.txt --keep-session-cookies --no-check-certificate 'https://docs.google.com/uc?export=download&id='"${GOOGLE_FILE_ID}" -O- | sed -rn 's/.*confirm=([0-9A-Za-z_]+).*/\1\n/p')&id=${GOOGLE_FILE_ID}" -O "${THE_DATA}" && rm -rf /tmp/cookies.txt
 
 if [ -f "${THE_DATA}" ];
 then
+    echo "...${TAR_EXE} xvfz ${THE_DATA}";
     ${TAR_EXE} xvfz "${THE_DATA}";
+    echo "...${RM_EXE} -rf ${THE_DATA}";
     ${RM_EXE} -rf "${THE_DATA}";
+    echo "...mv ${THE_ROOT}/machine_learning_gpu ${THE_ROOT}/data";
+    mv "${THE_ROOT}/machine_learning_gpu" "${THE_ROOT}/data";
+    echo "...${CHMOD_EXE} -R u+rwx ${THE_ROOT}/data";
     ${CHMOD_EXE} -R u+rwx "${THE_ROOT}/data";
     echo "...Google Drive data downloaded, unpacked, and ready to go.";
 else
@@ -222,8 +230,11 @@ cd "${ORIGINAL_DIR}";
 #================================================================
 #- Register the CUDA library with the system  (will be impacted by new version releases)
 #================================================================
-echo "...symbolically linking /usr/local/cuda/targets/x86_64-linux/lib/libcudart.so.11.8.89 to same dir with name libcuda.so.1 in support of Tensorflow.";
-sudo ln -s /usr/local/cuda/targets/x86_64-linux/lib/libcudart.so.11.8.89 /usr/local/cuda/targets/x86_64-linux/lib/libcuda.so.1;
+if ! [ -f /usr/local/cuda/targets/x86_64-linux/lib/libcuda.so.1 ];
+then
+	echo "...symbolically linking /usr/local/cuda/targets/x86_64-linux/lib/libcudart.so.11.8.89 to same dir with name libcuda.so.1 in support of Tensorflow.";
+	sudo ln -s /usr/local/cuda/targets/x86_64-linux/lib/libcudart.so.11.8.89 /usr/local/cuda/targets/x86_64-linux/lib/libcuda.so.1;
+fi
 
 echo "...adding CUDA library to /etc/profile to ensure it's always set.";
 sudo echo "export LD_LIBRARY_PATH=\"${LD_LIBRARY_PATH}:/usr/local/cuda/targets/x86_64-linux/lib\"" >> ~/.profile;
