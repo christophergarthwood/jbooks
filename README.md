@@ -427,3 +427,28 @@ Azure - `az`
 
 + https://ubuntuhandbook.org/index.php/2021/12/install-tesseract-ocr-5-ubuntu/#google_vignette
 + https://installati.one/install-libmagic-dev-ubuntu-22-04/
+
+## AI Concepts versus Statistics
+ 
+Linear regression is used widely amongst both statistical work and Artificial Intelligence (AI).  The core of AI is statistics on data.
+ 
+The primary difference between statistics and AI is the goal of linear regression.  Linear regression is used to test hypotheses, estimate parameters and explore relationships within the data.  Statistics has a more “hands on” approach to data with respect to linear regression calculations.  AI utilizes linear regression to train models that will in turn provide an optimized inference of the data with less concern over normalized distributions as this is its power.  AI is the ultimate curve fitter and optimization algorithm.
+ 
+Statistics is focused on exploring and generalizing the data whereas AI is focused on learning and providing a response by adapting to the data, hence the ultimate curve fitter.
+ 
+The council might consider using this input as the basis of differencing AI enabled solutions versus non-AI enabled solutions.
+ 
+ 
+ 
+Examples of statistical use of Linear Regression are hypothesizing the correlation of one variable to another.  Does skateboarding  influence health?  This hypothesis can be applied to a dataset that utilizes people that skateboard versus those that don’t.  Linear regression in this context helps validate the hypothesis.  AI would take the various datasets and provide the likelihood of health problems based on the input parameters with less concern about the desired hypothesis’ resolution.  This intent of the AI solution is to not obtain an equation, although it can be, and apply that directly to algorithmic solutions.
+ 
+**AI IS A DIRECT IMPLEMENTATION OF STATISTICS DESIGNED TO PROVIDE A DISCRETE ANSWER BASED ON INPUT PARAMETERS USING AN ENCAPSULATED ALGORITHM THAT HAS BEEN SPECIFICALLY TRAINED ON A VERSIONED DATASET.**
+ 
+## What is Generative AI?
+ 
+Machine Learning (ML), a.k.a. “narrow AI”, focuses on producing an answer given a versioned dataset it has trained on.  ML utilizes the discrete set of data given to fit a value, given a set of input parameters, to a curve.  ML equals a recognized, understood, and approachable dataset one can investigate at will.
+ 
+Generative AI utilizes a massive corpus of knowledge used as training data to support the creation of the model.  Content is “generated” from this massive corpus of knowledge based on model parameters provided at runtime, which influence model behavior, and the probability that the content generated is likely based on the prompt input.  Generative AI is a general model approach in that it doesn’t respond to a very discrete set of inputs and in turn provides a focused inference.  Generative AI, especially multi-modal models, has the ability to provide content that appears to be unique / creative by leveraging the aforementioned massive corpus of data into interesting combinations.
+ 
+Examples of Generative AI versus ML would be Computer Vision, Convolutional Neural Network (CNN), solutions using traditional ML methods.  In a CNN you have a dataset that is known, versioned, curated, and trusted.  The CNN is specifically trained on that data with inferences based on fitting the inputs, the new image, to the established neural pathways designed from training.  You are not “generating” data, you are obtaining an inference, response / answer, from the inputs provided which must, at some level, correlate to the training data used.  If you submit a picture of a flower to a CNN trained to identify flys you cannot expect a high probability of response.  
+ 
