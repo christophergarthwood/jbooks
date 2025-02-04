@@ -40,9 +40,10 @@ If you want to use GitHub's Codespaces simply initiate a Codespaces session from
 
 [References](#references)
 
-</hr>
+---
 
 <a name="what_is_ai"/>
+
 ## Artificial Intelligence (AI)
 
 ### AI Concepts versus Statistics
