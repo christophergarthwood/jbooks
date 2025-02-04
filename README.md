@@ -20,19 +20,20 @@ If you want to use GitHub's Codespaces simply initiate a Codespaces session from
 
 [Prerequisites](#prerequisites)
 
+[Project Data](#proj_data)
+
+[Repo Folder Structure](#folder_structure)
+
 [Useage](#useage)
 
 + [Branches](#branches)
 + [Versioning](#versioning)
-+ [Project Data](#proj_data)
 + [Coding Standards](#code_standards)
 + [Branching Standards](#branch_standards)
 + [Development Environment](#dev_environment)
 + [Data Standards](#data_process)
 + [External Dependencies](#docker)
 + [Deployment](#deployment)
-
-[Repo Folder Structure](#folder_structure)
 
 [General Coding Guidelines](#coding_compliance)
 
@@ -77,9 +78,9 @@ Main branch is the primary branch for this project.  Note that in the future a d
 
 ### System Requirements
 
-#### Google Cloude Provider (GCP)
+Assumes the use of Google Cloude Provider (GCP) or a similar provider that has a turnkey environment.
 
-##### Library Requirements
+#### Library Requirements
 
 Current known good configuration for these experiments:
 
@@ -95,7 +96,7 @@ pip install torch torchvision torchaudio pycuda
 
 <a name="useage"/>
 
-## Useage instructions
+## Useage Instructions
 
 <a name="versioning"/>
 
@@ -402,7 +403,9 @@ All technical solutions and development efforts must meet the following technica
 ### Useful Command(s)
 
 + Continously watch your GPU use:
-```alias watch_gpu='watch -n 1 nvidia-smi'```
+```
+alias watch_gpu='watch -n 1 nvidia-smi'
+```
 
 + Display all available modules, find command:
 ```
@@ -410,28 +413,44 @@ find /lib/modules/$(uname -r) -type f -name "\*.ko";
 ```
 
 + Show Hardware:
-```lshw;```
+```
+lshw;
+```
 
 + Show Video Card
-```sudo lshw -c video;```
+```
+sudo lshw -c video;
+```
 
 + See the list of available HW.
-```sudo ubuntu-drivers list;```
+```
+sudo ubuntu-drivers list;
+```
 
 + See what is actually available:
-```sudo apt-get install linux-headers-$(uname -r);```
+```
+sudo apt-get install linux-headers-$(uname -r);
+```
 
 + What version of driver are you using?
-```cat /proc/driver/nvidia/version;```
+```
+cat /proc/driver/nvidia/version;
+```
 
 + Are the kernel modules loaded?
-```lsmod | grep nvidia;```
+```
+lsmod | grep nvidia;
+```
 
 + This will show you GPU availability:
-```nvidia-smi;```
+```
+nvidia-smi;
+```
 
 + Show graphics driver details:
-```nvidia-smi --query-gpu=driver_version --format=csv```
+```
+nvidia-smi --query-gpu=driver_version --format=csv
+```
 
 + Load new Kernel on the fly for Jupyter Notebook (not generic):
 ```
@@ -475,7 +494,9 @@ conda create -n aiml_basic -c conda-forge python=3.9 numpy pandas tabulate scipy
 
 
 ### Example Jupyter Port Forwarding:
-`ssh -i ${the_key} -N -L localhost:8080:localhost:8080 ${the_user}@${the_ip}`
+```
+ssh -i ${the_key} -N -L localhost:8080:localhost:8080 ${the_user}@${the_ip}
+```
 
 ### Hyper-Parameter Issues with Python
 *** Note: Hyper-parameter tuning might cause an H5 lock issue.  Try: HDF5_USE_FILE_LOCKING='FALSE' on the OS. ***
@@ -484,26 +505,39 @@ conda create -n aiml_basic -c conda-forge python=3.9 numpy pandas tabulate scipy
 
 Things to know:
 
-+  `watch -n 1 "nvidia-smi"` will result in a display of all GPU's (which also give you the Id's) and their utilization.
++ Display of all GPU's (which also give you the Id's) and their utilization.
+```
+watch -n 1 "nvidia-smi"
+``` 
 
-+  `nvidia-smi --gpu-reset` or `nvidia-smi -r` is supposed to reset the GPU's if something hangs them up...good luck.
++ Is supposed to reset the GPU's if something hangs them up...good luck.
+```
+nvidia-smi --gpu-reset` or `nvidia-smi -r
+``` 
 
 + If you want to constrain which GPU's are used do the following:
 
-    + In your calling SH script use `export CUDA_VISIBLE_DEVICES=${INTRO_GPU_NUMBER};`
+    + In your calling SH script use
+```
+export CUDA_VISIBLE_DEVICES=${INTRO_GPU_NUMBER};
+```
     + In your Python script use:
-    `
-        tf.debugging.set_log_device_placement(True)
-        gpus = tf.config.experimental.list_physical_devices('GPU')
-        print("Num Physical GPU's Available: {} ".format(len(tf.config.experimental.list_physical_devices('GPU'))))
-        print("Num Logical  GPU's Available: {} ".format(len(tf.config.experimental.list_logical_devices('GPU'))))
-        print("Num CPU's Available: {} ".format(len(tf.config.experimental.list_physical_devices('CPU'))))
-        print("...utiliting GPU #:0")
-            with tf.device(f"/job:localhost/replica:0/task:0/device:GPU:0"):
-
+```
+tf.debugging.set_log_device_placement(True)
+gpus = tf.config.experimental.list_physical_devices('GPU')
+print("Num Physical GPU's Available: {} ".format(len(tf.config.experimental.list_physical_devices('GPU'))))
+print("Num Logical  GPU's Available: {} ".format(len(tf.config.experimental.list_logical_devices('GPU'))))
+print("Num CPU's Available: {} ".format(len(tf.config.experimental.list_physical_devices('CPU'))))
+print("...utiliting GPU #:0")
+    with tf.device(f"/job:localhost/replica:0/task:0/device:GPU:0"):
+        #some code here4
+```
      Notice how GPU:0 is referenced.  That's becuase you limited all GPU visibility at the shell level and the Python code can only see a single GPU.  It's a strategy.  Normally you can simply reference the GPU# in question but I've found that's not very reliable.
 
-+ If you're having problems with GPU memory you can try, in your SH script: `export TF_FORCE_GPU_ALLOW_GROWTH="true"`
++ If you're having problems with GPU memory you can try, in your SH script: 
+```
+export TF_FORCE_GPU_ALLOW_GROWTH="true"
+```
 
 
 ## Reference
