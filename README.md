@@ -531,7 +531,7 @@ pip install cupy-cuda12x
 ###### PyTorch
 + Reference: https://pytorch.org/get-started/locally/
 ```
-pip3 install torch torchvision torchaudio
+pip install torch torchvision torchaudio
 ```
 
 ###### TensorFlow
