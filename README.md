@@ -489,7 +489,75 @@ sudo $(which conda) clean --all -y;
 
 ##### aiml_basic
 ```
-conda create -n aiml_basic -c conda-forge python=3.9 numpy pandas tabulate scipy matplotlib jupyter jupyterlab jupyter_dashboards nbconvert tqdm icecream scikit-learn netCDF4 xarray icecream geopandas pylint autopep8 black unidecode -y
+conda create -n aiml -c conda-forge python=3.12 numpy pandas scipy matplotlib jupyter jupyterlab jupyter_dashboards nbconvert scikit-learn netCDF4 xarray geopandas -y
+```
+
+```
+conda activate aiml
+
+conda install -c conda-forge matplotlib seaborn Pillow imageio -y
+
+conda install -c conda-forge backoff gdown tabulate tqdm python-dotenv rich rich[jupyter] watermark watermark[GPU] icecream pylint autopep8 black unidecode pydot piexif pathlib -y
+
+conda install -c conda-forge pystac pystac[jinja2] pystac[orjson] pystac[validation] -y
+
+conda install -c conda-forge fastparquet -y
+conda install -c conda-forge zarr -y
+conda install -c conda-forge dask[complete] -y
+conda install -c conda-forge polars[all] -y
+```
+
+##### Install cupy cudf tensorflow torch, etc. by hand with pip
+###### NVIDIA
++ Reference: https://docs.nvidia.com/cuda/cuda-quick-start-guide/
+```
+pip install --upgrade setuptools pip wheel
+pip install nvidia-pyindex
+pip install nvidia-cuda-runtime-cu12
+```
+
+###### CUDF (GPU support for Pandas, Polars, Dask)
++ Reference: https://docs.rapids.ai/install/
+```
+pip install --extra-index-url=https://pypi.nvidia.com "cudf-cu12" "dask-cudf-cu12" "cuml-cu12" "cugraph-cu12" "nx-cugraph-cu12" "cuspatial-cu12" "cuproj-cu12" "cuxfilter-cu12" "cucim-cu12" "pylibraft-cu12" "raft-dask-cu12" "cuvs-cu12"
+```
+
+###### CuPy (GPU support for Numpy and Scipy)
++ Reference: https://docs.cupy.dev/en/stable/install.html
+```
+pip install cupy-cuda12x
+```
+
+###### PyTorch
++ Reference: https://pytorch.org/get-started/locally/
+```
+pip3 install torch torchvision torchaudio
+```
+
+###### TensorFlow
++ Reference: https://www.tensorflow.org/install/pip
+```
+pip install tensorflow
+#verify the installation
+python --version
+python -c "import tensorflow as tf; print(tf.config.list_physical_devices('GPU'))"
+```
+
+##### NLP
+```
+conda create -n nlp -c conda-forge python=3.12 numpy pandas scipy matplotlib jupyter jupyterlab jupyter_dashboards nbconvert scikit-learn netCDF4 xarray geopandas -y
+```
+
+```
+conda activate nlp
+
+conda install -c conda-forge matplotlib seaborn Pillow imageio -y
+
+conda install -c conda-forge backoff gdown tabulate tqdm python-dotenv rich rich[jupyter] watermark watermark[GPU] icecream pylint autopep8 black unidecode pydot piexif pathlib-y
+
+conda install -c conda-forge nltk bs4 wordcloud spacy gensim 
+
+#install cupy cudf tensorflow torch, etc. by hand with pip
 ```
 
 
