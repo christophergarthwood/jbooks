@@ -85,11 +85,11 @@ Assumes the use of Google Cloude Provider (GCP) or a similar provider that has a
 Current known good configuration for these experiments:
 
 ```shell
-pip install nvidia-cudnn-cu12==8.9.7.29
-pip install tensorflow==2.17
-pip install tensorrt
-pip install spacy[cuda12x]
-pip install torch torchvision torchaudio pycuda
+nvidia-cudnn-cu12
+tensorflow==2.17
+torch torchvision torchaudio pycuda
+cudf
+cupy
 ```
 
 **Expect to see a v2.4 for Torch.**
@@ -499,7 +499,7 @@ conda activate aiml
 
 conda install -c conda-forge matplotlib seaborn Pillow imageio -y
 
-conda install -c conda-forge backoff gdown tabulate tqdm python-dotenv rich rich[jupyter] watermark watermark[GPU] icecream pylint autopep8 black unidecode pydot piexif pathlib -y
+conda install -c conda-forge backoff gdown tabulate tqdm python-dotenv black black[jupyter] rich rich[jupyter] watermark watermark[GPU] icecream pylint autopep8 black unidecode pydot piexif pathlib -y
 ```
 
 ##### Install cupy cudf tensorflow torch, etc. by hand with pip
