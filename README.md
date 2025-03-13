@@ -467,17 +467,17 @@ source /home/jovyan/.bash_profile;
 
 + ***Create Stripped down version of an environment***:
 ```
-sudo $(which conda) env export --from-history --name aiml_loaded > striped.yml;
+sudo $(which conda) env export --from-history --name aiml > striped.yml;
 ```
 
 + ***Most secure method cross-platform***:
 ```
-sudo $(which conda) env export --no-builds  --name aiml_loaded > ./environment/archless_environment.yml;
+sudo $(which conda) env export --no-builds  --name aiml > ./environment/archless_environment.yml;
 ```
 
 + ***Most generic method (verified to work everywhere)***:
 ```
-sudo $(which conda) env export --name aiml_loaded > ./environment/environment.yml;
+sudo $(which conda) env export --name aiml > ./environment/environment.yml;
 ```
 
 + Clean Up the Anaconda release to make disk space
@@ -489,6 +489,8 @@ sudo $(which conda) clean --all -y;
 
 ##### aiml_basic
 ```
+sudo $(which conda) update -n base -c defaults conda
+
 conda create -n aiml -c conda-forge python=3.12 numpy pandas scipy matplotlib jupyter jupyterlab jupyter_dashboards nbconvert scikit-learn netCDF4 xarray geopandas -y
 ```
 
@@ -498,13 +500,6 @@ conda activate aiml
 conda install -c conda-forge matplotlib seaborn Pillow imageio -y
 
 conda install -c conda-forge backoff gdown tabulate tqdm python-dotenv rich rich[jupyter] watermark watermark[GPU] icecream pylint autopep8 black unidecode pydot piexif pathlib -y
-
-conda install -c conda-forge pystac pystac[jinja2] pystac[orjson] pystac[validation] -y
-
-conda install -c conda-forge fastparquet -y
-conda install -c conda-forge zarr -y
-conda install -c conda-forge dask[complete] -y
-conda install -c conda-forge polars[all] -y
 ```
 
 ##### Install cupy cudf tensorflow torch, etc. by hand with pip
@@ -541,6 +536,16 @@ pip install tensorflow
 #verify the installation
 python --version
 python -c "import tensorflow as tf; print(tf.config.list_physical_devices('GPU'))"
+```
+
+###### Major Data Manipulation Libraries
+```
+conda install -c conda-forge pystac pystac[jinja2] pystac[orjson] pystac[validation] -y
+conda install -c conda-forge fastparquet -y
+conda install -c conda-forge pyarrow -y
+conda install -c conda-forge dask[complete] -y
+conda install -c conda-forge polars[all] -y
+conda install -c conda-forge zarr=>3 -y
 ```
 
 ##### NLP
