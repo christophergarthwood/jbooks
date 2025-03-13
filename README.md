@@ -546,6 +546,8 @@ conda install -c conda-forge pyarrow -y
 conda install -c conda-forge dask[complete] -y
 conda install -c conda-forge polars[all] -y
 conda install -c conda-forge zarr=>3 -y
+conda install -c conda-forge xarray -y
+conda install -c conda-forge cupy-xarray -y
 ```
 
 ##### NLP

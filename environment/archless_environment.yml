@@ -1,0 +1,4 @@
+name: aiml
+channels:
+  - defaults
+prefix: /home/cwood/anaconda3/envs/aiml
