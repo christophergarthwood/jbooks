@@ -1,5 +1,0 @@
-name: usfs_aiml_loaded
-channels:
-  - conda-forge
-  - defaults
-prefix: /opt/conda/envs/usfs_aiml_loaded

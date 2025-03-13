@@ -1,5 +1,0 @@
-name: machine_learning_gpu
-channels:
-  - conda-forge
-  - defaults
-prefix: /opt/conda/envs/machine_learning_gpu
