@@ -494,6 +494,11 @@ sudo $(which conda) update -n base -c defaults conda
 conda create -n aiml -c conda-forge python=3.12 numpy pandas scipy matplotlib jupyter jupyterlab jupyter_dashboards nbconvert scikit-learn netCDF4 xarray geopandas -y
 ```
 
+#### VIM for Jupyter
+```
+pip install jupyterlab-vim
+```
+
 ```
 conda activate aiml
 
