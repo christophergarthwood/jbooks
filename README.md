@@ -488,6 +488,11 @@ sudo $(which conda) clean --all -y;
 
 #### Tailored Environments
 
+##### Environment Creation Commands
+```
+conda create --name <environment_name>
+```
+
 ##### aiml_basic
 ```
 sudo $(which conda) update -n base -c defaults conda
