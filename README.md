@@ -510,7 +510,7 @@ conda activate aiml
 
 conda install -c conda-forge matplotlib seaborn Pillow imageio -y
 
-conda install -c conda-forge backoff gdown tabulate tqdm python-dotenv black black[jupyter] rich rich[jupyter] watermark watermark[GPU] icecream pylint autopep8 black unidecode pydot piexif pathlib -y
+conda install -c conda-forge backoff gdown tabulate tqdm python-dotenv black black[jupyter] rich rich[jupyter] watermark watermark[GPU] icecream pylint autopep8 black unidecode pydot piexif pathlib  -y
 ```
 
 ##### Install cupy cudf tensorflow torch, etc. by hand with pip
